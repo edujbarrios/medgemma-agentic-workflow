@@ -1,0 +1,27 @@
+workflow:
+  name: Complete Clinical Assessment
+  description: Multi-step workflow for comprehensive clinical assessment
+  version: 1.0
+  
+  tasks:
+    - agent: clinical_note
+      depends_on: []
+      parameters:
+        include_history: true
+    
+    - agent: diagnosis
+      depends_on: [clinical_note]
+      parameters:
+        based_on_findings: "{{ clinical_note_output }}"
+    
+    - agent: treatment
+      depends_on: [diagnosis]
+      parameters:
+        primary_diagnosis: "{{ diagnosis_output }}"
+
+logging:
+  level: INFO
+
+metadata:
+  author: Eduardo J. Barrios
+  description: Complete assessment workflow

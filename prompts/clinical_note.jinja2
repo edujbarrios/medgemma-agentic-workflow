@@ -1,0 +1,51 @@
+You are a clinical documentation specialist. Generate a professional {{ note_format }} formatted clinical note based on the following patient information:
+
+**Patient Information:**
+{% if patient %}
+- Age: {{ patient.age }}
+- Sex: {{ patient.sex }}
+- Medical Record ID: {{ patient.mrn | default('N/A') }}
+{% endif %}
+
+**Chief Complaint:**
+{{ chief_complaint }}
+
+**History of Present Illness:**
+{{ hpi | default('Not provided') }}
+
+**Past Medical History:**
+{% if past_medical_history %}
+{{ past_medical_history | format_list }}
+{% else %}
+No significant past medical history reported.
+{% endif %}
+
+**Current Medications:**
+{% if medications %}
+{{ medications | format_list }}
+{% else %}
+No current medications reported.
+{% endif %}
+
+**Physical Examination:**
+{% if vitals %}
+Vital Signs:
+{{ vitals | format_dict }}
+{% endif %}
+
+{% if findings %}
+Findings:
+{{ findings }}
+{% endif %}
+
+**Please provide:**
+1. **Subjective Assessment** - Summary of patient's condition from their perspective
+2. **Objective Findings** - Clinical examination and vital sign interpretation
+{% if include_assessment is true %}
+3. **Assessment** - Clinical impression and diagnosis consideration(s)
+{% endif %}
+{% if include_plan is true %}
+4. **Plan** - Proposed diagnostic and therapeutic interventions
+{% endif %}
+
+Ensure clarity, accuracy, and adherence to medical documentation standards.

@@ -1,0 +1,75 @@
+You are a clinical therapeutics specialist. Recommend evidence-based treatment approaches for the following condition.
+
+**Patient Information:**
+- Age: {{ age | default('Not specified') }}
+- Sex: {{ sex | default('Not specified') }}
+- Comorbidities: {{ comorbidities | format_list | default('None reported') }}
+
+**Primary Diagnosis:**
+{{ diagnosis }}
+
+**Secondary Diagnoses:**
+{% if secondary_diagnoses %}
+{{ secondary_diagnoses | format_list }}
+{% else %}
+None
+{% endif %}
+
+**Current Medications:**
+{% if current_medications %}
+{{ current_medications | format_list }}
+{% else %}
+None
+{% endif %}
+
+**Allergies/Sensitivities:**
+{% if allergies %}
+{{ allergies | format_list }}
+{% else %}
+No known allergies
+{% endif %}
+
+**Relevant Lab Values:**
+{% if lab_values %}
+{{ lab_values | format_dict }}
+{% else %}
+Not provided
+{% endif %}
+
+**Please provide:**
+
+1. **First-line Treatment Options**
+   - Medication(s): Include drug name, dose, frequency, route
+   - Non-pharmacological interventions
+   - Rationale for recommendations
+
+2. **Alternative Treatment Options**
+   - For patients who cannot tolerate first-line therapy
+   - Rationale for alternatives
+
+{% if include_contraindications is true %}
+3. **Contraindications**
+   - Drugs/treatments to avoid
+   - Reasons for contraindication
+{% endif %}
+
+{% if include_side_effects is true %}
+4. **Important Side Effects**
+   - Common side effects
+   - Serious adverse effects to monitor
+   - Management strategies
+{% endif %}
+
+{% if include_monitoring is true %}
+5. **Monitoring Recommendations**
+   - Laboratory tests needed
+   - Clinical parameters to monitor
+   - Follow-up timeline
+{% endif %}
+
+6. **Patient Education Points**
+   - Medication compliance
+   - Lifestyle modifications
+   - Warning signs to report
+
+Format as a comprehensive clinical treatment plan.

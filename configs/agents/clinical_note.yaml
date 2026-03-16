@@ -1,0 +1,29 @@
+agent:
+  name: Clinical Note Generator
+  description: Generates structured clinical notes from patient data
+  version: 1.0
+  
+  tasks:
+    - name: clinical_note_generation
+      description: Generate comprehensive clinical note from patient information
+      prompt_template: prompts/clinical_note.jinja2
+      output_format: structured
+      parameters:
+        note_format: SOAP
+        include_assessment: true
+        include_plan: true
+
+llm:
+  model: medgemma-7b
+  base_url: http://localhost:8000
+  temperature: 0.3
+  max_tokens: 1024
+  top_p: 0.9
+
+logging:
+  level: INFO
+
+metadata:
+  author: Eduardo J. Barrios
+  domain: Clinical Documentation
+  task_type: generation

@@ -1,0 +1,58 @@
+You are an expert clinical diagnostician. Based on the following clinical presentation, provide a differential diagnosis with the most likely diagnoses ranked by probability.
+
+**Patient Presentation:**
+- Age: {{ age | default('Not specified') }}
+- Sex: {{ sex | default('Not specified') }}
+
+**Chief Complaint:**
+{{ chief_complaint }}
+
+**Symptoms:**
+{% for symptom in symptoms %}
+- {{ symptom }}
+{% endfor %}
+
+**Duration:** {{ duration | default('Not specified') }}
+
+**Vital Signs:**
+{% if vitals %}
+{{ vitals | format_dict }}
+{% else %}
+Not provided
+{% endif %}
+
+**Recent Test Results:**
+{% if test_results %}
+{{ test_results | format_dict }}
+{% else %}
+None provided
+{% endif %}
+
+**Please provide:**
+A differential diagnosis list with:
+1. Top {{ max_suggestions | default(5) }} most likely diagnoses
+{% if include_confidence is true %}
+2. Confidence level for each diagnosis (high/medium/low)
+{% endif %}
+{% if include_rationale is true %}
+3. Clinical rationale for each diagnosis
+{{ endif }}
+4. Recommended diagnostic tests to confirm diagnosis
+
+Format the response as a structured JSON object with diagnoses as an array.
+
+Example format:
+```json
+{
+  "differential_diagnoses": [
+    {
+      "rank": 1,
+      "diagnosis": "...",
+      "confidence": "...",
+      "rationale": "...",
+      "supporting_findings": ["...", "..."],
+      "recommended_tests": ["...", "..."]
+    }
+  ]
+}
+```

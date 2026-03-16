@@ -1,0 +1,29 @@
+agent:
+  name: Treatment Recommendation Agent
+  description: Recommends evidence-based treatment approaches
+  version: 1.0
+  
+  tasks:
+    - name: treatment_recommendation
+      description: Suggest treatment options based on diagnosis
+      prompt_template: prompts/treatment.jinja2
+      output_format: structured
+      parameters:
+        include_contraindications: true
+        include_side_effects: true
+        include_monitoring: true
+
+llm:
+  model: medgemma-7b
+  base_url: http://localhost:8000
+  temperature: 0.2
+  max_tokens: 1024
+  top_p: 0.9
+
+logging:
+  level: INFO
+
+metadata:
+  author: Eduardo J. Barrios
+  domain: Clinical Treatment
+  task_type: recommendation
