@@ -34,7 +34,7 @@ A fully parameterized, production-ready development framework for building auton
 
 ```bash
 # Clone the repository
-git clone https://github.com/edujbarrios/medgemma-agents.git
+git clone https://github.com/edujbarrios/medgemma-agentic-workflow.git
 cd medgemma-agents
 
 # Create virtual environment
