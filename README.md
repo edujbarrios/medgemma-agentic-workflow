@@ -382,6 +382,6 @@ This project is licensed under the Apache License 2.0 - see [LICENSE](LICENSE) f
 
 ---
 
-**Made by Eduardo J. Barrios** • [GitHub](https://github.com/edujbarrios) • [LinkedIn](https://linkedin.com/in/edujbarrios)
+**Made by Eduardo J. Barrios** • [GitHub](https://github.com/edujbarrios)
 
 **Development Tool** | Open Source | Apache 2.0 License
