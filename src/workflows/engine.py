@@ -1,6 +1,7 @@
 """Workflow orchestration engine."""
 
 import time
+from collections import Counter
 from typing import Dict, Any, List, Optional
 from dataclasses import dataclass, field
 from loguru import logger
@@ -51,7 +52,7 @@ class Workflow:
         try:
             is_valid = True
             task_names = [t.agent for t in self.config.tasks]
-            duplicate_task_names = {name for name in task_names if task_names.count(name) > 1}
+            duplicate_task_names = {name for name, count in Counter(task_names).items() if count > 1}
 
             if duplicate_task_names:
                 is_valid = False
