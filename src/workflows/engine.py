@@ -151,16 +151,12 @@ class Workflow:
         in_progress = set()
         result = []
         tasks_by_name = {task.agent: task for task in self.config.tasks}
-        if len(tasks_by_name) != len(self.config.tasks):
-            raise ValueError("Duplicate task names found in workflow configuration")
         
         def visit(task_name: str):
             if task_name in visited:
                 return
             if task_name in in_progress:
                 raise ValueError(f"Circular dependency detected involving task: {task_name}")
-            if task_name not in tasks_by_name:
-                raise ValueError(f"Dependency not found: {task_name}")
             
             in_progress.add(task_name)
             task = tasks_by_name[task_name]
