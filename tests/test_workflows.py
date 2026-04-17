@@ -54,3 +54,22 @@ def test_execute_fails_with_circular_dependency():
 
     assert result["success"] is False
     assert "Circular dependency detected" in result["error"]
+
+
+def test_execute_fails_with_duplicate_task_names():
+    engine = WorkflowEngine()
+    engine.register_agent("task_a", _make_agent("task_a"))
+
+    workflow_config = WorkflowConfig(
+        name="duplicate-workflow",
+        tasks=[
+            {"agent": "task_a", "depends_on": []},
+            {"agent": "task_a", "depends_on": []},
+        ],
+    )
+    workflow = engine.create_workflow(workflow_config)
+
+    result = workflow.execute(initial_input={})
+
+    assert result["success"] is False
+    assert "Invalid workflow configuration" in result["error"]

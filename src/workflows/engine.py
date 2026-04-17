@@ -159,7 +159,9 @@ class Workflow:
                 raise ValueError(f"Circular dependency detected involving task: {task_name}")
             
             in_progress.add(task_name)
-            task = tasks_by_name[task_name]
+            task = tasks_by_name.get(task_name)
+            if task is None:
+                raise ValueError(f"Dependency not found: {task_name}")
             for dep in task.depends_on:
                 visit(dep)
             
