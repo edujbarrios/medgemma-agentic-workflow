@@ -1,6 +1,7 @@
 """Workflow orchestration engine."""
 
 import time
+from collections import Counter
 from typing import Dict, Any, List, Optional
 from dataclasses import dataclass, field
 from loguru import logger
@@ -49,19 +50,29 @@ class Workflow:
             True if valid, False otherwise
         """
         try:
+            is_valid = True
+            task_names = [t.agent for t in self.config.tasks]
+            duplicate_task_names = {name for name, count in Counter(task_names).items() if count > 1}
+
+            if duplicate_task_names:
+                is_valid = False
+                logger.warning(f"Duplicate task names found: {sorted(duplicate_task_names)}")
+
             # Check all agents are available
             for task in self.config.tasks:
                 if task.agent not in self.agents:
+                    is_valid = False
                     logger.warning(f"Agent not found: {task.agent}")
             
             # Check task dependencies
-            task_names = {t.agent for t in self.config.tasks}
+            task_name_set = set(task_names)
             for task in self.config.tasks:
                 for dep in task.depends_on:
-                    if dep not in task_names:
+                    if dep not in task_name_set:
+                        is_valid = False
                         logger.warning(f"Dependency not found: {dep} <- {task.agent}")
             
-            return True
+            return is_valid
         except Exception as e:
             logger.error(f"Workflow validation failed: {e}")
             return False
@@ -83,6 +94,9 @@ class Workflow:
         start_time = time.time()
         
         try:
+            if not self.validate_config():
+                raise ValueError("Invalid workflow configuration")
+
             # Initialize context
             context = {
                 "input": initial_input,
@@ -134,17 +148,25 @@ class Workflow:
             List of task names in execution order
         """
         visited = set()
+        in_progress = set()
         result = []
+        tasks_by_name = {task.agent: task for task in self.config.tasks}
         
         def visit(task_name: str):
             if task_name in visited:
                 return
-            visited.add(task_name)
+            if task_name in in_progress:
+                raise ValueError(f"Circular dependency detected involving task: {task_name}")
             
-            task = next(t for t in self.config.tasks if t.agent == task_name)
+            in_progress.add(task_name)
+            task = tasks_by_name.get(task_name)
+            if task is None:
+                raise ValueError(f"Dependency not found: {task_name}")
             for dep in task.depends_on:
                 visit(dep)
             
+            in_progress.remove(task_name)
+            visited.add(task_name)
             result.append(task_name)
         
         for task in self.config.tasks:
